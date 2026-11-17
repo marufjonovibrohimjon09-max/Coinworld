@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#101522">
+<title>COIN WORLD</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#0d1320;--panel:#172235;--panel2:#202e45;--gold:#ffc928;--muted:#9eacc1;--green:#20c982;--blue:#3988ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f9fc;font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+.app{max-width:520px;margin:auto;min-height:100vh;padding:18px 16px 92px}
+header{display:flex;justify-content:space-between;align-items:center;margin:4px 0 18px}
+.brand{font-weight:900;font-size:22px;letter-spacing:.5px;color:var(--gold)}.tag{font-size:11px;color:#b9c7da;background:#26354c;padding:6px 10px;border-radius:20px}
+.hero{background:linear-gradient(135deg,#253653,#111a2a);border:1px solid #344765;border-radius:22px;padding:20px;text-align:center;box-shadow:0 12px 30px #0004}
+.small{font-size:13px;color:var(--muted)}.balance{font-size:36px;font-weight:900;color:var(--gold);margin:6px 0}.unit{font-size:12px;color:#c4cede}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.tile,.card{background:var(--panel);border:1px solid #263750;border-radius:16px;padding:15px}
+.tile{min-height:94px;text-align:left;color:white;font-weight:700;font-size:14px;cursor:pointer}.tile span{display:block;font-size:24px;margin-bottom:7px}
+h2{font-size:18px;margin:22px 0 10px}.card{margin:10px 0}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+button{border:0;border-radius:12px;padding:11px 14px;background:var(--gold);color:#1a1a1a;font-weight:800;cursor:pointer}
+button.secondary{background:#2a3c58;color:white}button.green{background:var(--green);color:#082217}
+button:disabled{opacity:.45;cursor:not-allowed}.muted{color:var(--muted);font-size:13px}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #3b4d67;background:#0f1929;color:white;margin:8px 0}
+nav{position:fixed;bottom:0;left:0;right:0;background:#111b2b;border-top:1px solid #2b3b54;display:flex;justify-content:center;z-index:5}
+.navinner{max-width:520px;width:100%;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+nav button{background:transparent;color:#b8c5d8;padding:7px 2px;font-size:11px}nav button.active{color:var(--gold)}
+.page{display:none}.page.active{display:block}.notice{background:#2b2719;color:#f9d86c;border:1px solid #66511b;padding:10px 12px;border-radius:12px;font-size:12px;margin-top:14px}
+.pill{font-size:12px;padding:5px 9px;border-radius:20px;background:#23354d;color:#c6d7ef}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">🪙 COIN WORLD</div><div class="tag">TELEGRAM MINI APP</div></header>
+
+<section id="home" class="page active">
+  <div class="hero">
+    <div class="small">Mening balansim</div>
+    <div class="balance" id="balance">0 COIN</div>
+    <div class="unit" id="cashValue">Taxminiy qiymat: 0 so‘m</div>
+  </div>
+  <div class="actions">
+    <button class="tile" onclick="showPage('tasks')"><span>✅</span>Vazifalar</button>
+    <button class="tile" onclick="showPage('refer')"><span>👥</span>Do‘st taklif qilish</button>
+    <button class="tile" onclick="showPage('auction')"><span>🔨</span>Auksion</button>
+    <button class="tile" onclick="showPage('exchange')"><span>💵</span>So‘mga almashtirish</button>
+  </div>
+  <div class="card row"><div><b>Kunlik bonus</b><div class="muted">Har kuni kirib bonus oling</div></div><button class="green" onclick="dailyBonus()">+25 COIN</button></div>
+  <div class="notice">Demo rejim: bu sahifadagi balans va amallar faqat ushbu qurilmada saqlanadi. Haqiqiy pul yechish va auksion uchun server kerak.</div>
+</section>
+
+<section id="tasks" class="page">
+<h2>✅ Vazifalar</h2>
+<div class="card row"><div><b>COIN WORLD kanaliga obuna bo‘ling</b><div class="muted">Mukofot: 50 COIN</div></div><button onclick="completeTask('channel',50,this)">Bajarish</button></div>
+<div class="card row"><div><b>Do‘stingizga loyiha haqida ayting</b><div class="muted">Mukofot: 50 COIN</div></div><button onclick="completeTask('share',50,this)">Bajarish</button></div>
+<p class="muted">Haqiqiy obuna tekshiruvi bot serveri orqali ulanadi.</p>
+</section>
+
+<section id="refer" class="page">
+<h2>👥 Referal dasturi</h2>
+<div class="card"><div class="small">Taklif havolangiz</div><input id="refLink" readonly value="Telegram bot ulanmaguncha havola yaratilmaydi"><button onclick="copyRef()">Havolani nusxalash</button><p class="muted">Referal bonusi: har bir tasdiqlangan yangi foydalanuvchi uchun 100 COIN (demo).</p></div>
+</section>
+
+<section id="auction" class="page">
+<h2>🔨 Auksion</h2>
+<div class="card"><div class="row"><b>🎁 Sinov sovg‘asi</b><span class="pill">Demo lot</span></div><p class="muted">Boshlang‘ich narx: 500 COIN</p><div class="row"><b>Joriy taklif: <span id="bid">500</span> COIN</b><button onclick="bid()">+50 COIN taklif</button></div><p class="muted">Bu namuna auksion. Haqiqiy savdolar server orqali boshqariladi.</p></div>
+</section>
+
+<section id="exchange" class="page">
+<h2>💵 So‘mga almashtirish</h2>
+<div class="card">
+<div class="row"><span class="muted">Admin belgilagan demo kurs</span><span class="pill" id="rateLabel">1000 COIN = 100 so‘m</span></div>
+<label for="amount" class="muted">Almashtiriladigan COIN</label><input id="amount" type="number" min="1000" step="1000" value="1000" oninput="calc()">
+<div class="row"><b>Hisoblangan summa</b><b id="result" style="color:var(--gold)">100 so‘m</b></div>
+<button class="green" style="width:100%;margin-top:12px" onclick="requestExchange()">So‘rov yuborish</button>
+<p class="muted">Demo hisob-kitob. Haqiqiy to‘lov va pul yechish tasdiqlangan backend hamda to‘lov tizimini talab qiladi.</p>
+</div>
+</section>
+
+<section id="profile" class="page">
+<h2>👤 Profil</h2><div class="card"><div class="row"><span class="muted">Telegram foydalanuvchisi</span><b id="username">Mehmon</b></div><div class="row" style="margin-top:12px"><span class="muted">Balans</span><b id="profileBalance">0 COIN</b></div></div>
+</section>
+</div>
+<nav><div class="navinner">
+<button class="active" data-page="home" onclick="showPage('home')">🏠<br>Bosh sahifa</button>
+<button data-page="tasks" onclick="showPage('tasks')">✅<br>Vazifalar</button>
+<button data-page="auction" onclick="showPage('auction')">🔨<br>Auksion</button>
+<button data-page="profile" onclick="showPage('profile')">👤<br>Profil</button>
+</div></nav>
+<script>
+const tg=window.Telegram?.WebApp; if(tg){tg.ready();tg.expand();try{tg.setHeaderColor('#0d1320');tg.setBackgroundColor('#0d1320')}catch(e){}}
+const KEY='cw_demo_state_v1';
+let state={balance:0,done:[],lastBonus:'',rate:0.1,bid:500};
+try{state={...state,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));render()}
+function render(){document.getElementById('balance').textContent=state.balance.toLocaleString('en-US')+' COIN';document.getElementById('profileBalance').textContent=state.balance.toLocaleString('en-US')+' COIN';document.getElementById('cashValue').textContent='Taxminiy qiymat: '+Math.floor(state.balance*state.rate).toLocaleString('en-US')+' so‘m';document.getElementById('rateLabel').textContent='1000 COIN = '+Math.round(1000*state.rate)+' so‘m';document.getElementById('bid').textContent=state.bid.toLocaleString('en-US');calc()}
+function showPage(id){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id))}
+function completeTask(id,reward,btn){if(state.done.includes(id)){alert('Bu vazifa avval bajarilgan.');return}state.done.push(id);state.balance+=reward;save();btn.textContent='Bajarildi ✓';btn.disabled=true;alert('Demo: '+reward+' COIN qo‘shildi!')}
+function dailyBonus(){let d=new Date().toISOString().slice(0,10);if(state.lastBonus===d){alert('Bugungi bonus olingan.');return}state.lastBonus=d;state.balance+=25;save();alert('25 COIN qo‘shildi!')}
+function bid(){if(state.balance<state.bid+50){alert('Taklif berish uchun COIN yetarli emas.');return}state.balance-=state.bid+50;state.bid+=50;save();alert('Demo taklif qabul qilindi.')}
+function calc(){let n=Math.max(0,Number(document.getElementById('amount').value)||0);document.getElementById('result').textContent=Math.floor(n*state.rate).toLocaleString('en-US')+' so‘m'}
+function requestExchange(){let n=Number(document.getElementById('amount').value)||0;if(n<1000||n>state.balance){alert('Miqdorni tekshiring. Kamida 1000 COIN va balansingizdan oshmasin.');return}alert('Bu demo. Haqiqiy pul yechish so‘rovi server ulanmaguncha yuborilmaydi.')}
+function copyRef(){let val=document.getElementById('refLink').value;if(navigator.clipboard){navigator.clipboard.writeText(val).then(()=>alert('Nusxalandi'))}else{alert('Telegram bot ulanmaguncha referal havola tayyor emas.')}}
+const user=tg?.initDataUnsafe?.user;if(user){document.getElementById('username').textContent=user.username?'@'+user.username:(user.first_name||'Telegram foydalanuvchisi');document.getElementById('refLink').value='Referal havola server ulangandan keyin yaratiladi'}
+render();
+</script>
+</body>
+</html>
