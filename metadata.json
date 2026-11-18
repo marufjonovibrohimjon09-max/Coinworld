@@ -1,0 +1,6 @@
+{
+  "name": "COIN WORLD",
+  "description": "COIN WORLD — Telegram Mini App formatidagi zamonaviy raqamli tangalar ekotizimi: vazifalar, kunlik bonus, referal tizimi, bozor, auksion va reyting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
